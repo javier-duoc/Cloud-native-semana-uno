@@ -1,0 +1,26 @@
+services:
+  microservice:
+    image: ${DOCKERHUB_USERNAME}/${IMAGE_NAME}:latest
+    container_name: cloudmarket-api
+    restart: unless-stopped
+    ports:
+      - "80:8080"
+    environment:
+      NOTIFICACIONES_URL: http://notificaciones-api:8081
+    volumes:
+      - cloudmarket_data:/app/data
+    depends_on:
+      - notificaciones-api
+
+  notificaciones-api:
+    image: ${DOCKERHUB_USERNAME}/${IMAGE_NAME}-notificaciones:latest
+    container_name: notificaciones-api
+    restart: unless-stopped
+    expose:
+      - "8081"
+    volumes:
+      - notificaciones_data:/app/data
+
+volumes:
+  cloudmarket_data:
+  notificaciones_data:
